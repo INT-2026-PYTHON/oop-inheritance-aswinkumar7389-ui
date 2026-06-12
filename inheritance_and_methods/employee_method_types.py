@@ -96,3 +96,55 @@ is_valid_salary("abc")  -> False
 =================================================
 
 """
+class Employee:
+    # Class attributes
+    company   = "Acme Corp"
+    raise_pct = 5
+
+    def __init__(self, name, salary):
+        self.name   = name
+        self.salary = salary
+
+    # Instance method
+    def apply_raise(self):
+        self.salary += self.salary * (Employee.raise_pct / 100)
+
+    # Class methods
+    @classmethod
+    def set_raise_percentage(cls, new_pct):
+        cls.raise_pct = new_pct
+
+    @classmethod
+    def from_string(cls, csv_line):
+        name, salary = csv_line.split(",")
+        return cls(name, float(salary))
+
+    # Static method
+    @staticmethod
+    def is_valid_salary(amount):
+       return type(amount) in (int, float) and amount > 0
+
+# Input
+e1 = Employee("Alice", 100000)
+e2 = Employee("Bob",   80000)
+e3 = Employee.from_string("Carol,75000")
+
+# Apply initial raise (5%)
+e1.apply_raise()
+
+# Change raise percentage globally to 10%
+Employee.set_raise_percentage(10)
+
+# Apply new raise to others
+e2.apply_raise()
+e3.apply_raise()
+
+# Print results
+print(f"{e1.name} -> {e1.salary}")
+print(f"{e2.name} -> {e2.salary}")
+print(f"{e3.name} -> {e3.salary}")
+
+# Test static method
+print("is_valid_salary(50000)  ->", Employee.is_valid_salary(50000))
+print("is_valid_salary(-100)   ->", Employee.is_valid_salary(-100))
+print("is_valid_salary('abc')  ->", Employee.is_valid_salary("abc"))
